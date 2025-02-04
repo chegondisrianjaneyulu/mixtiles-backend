@@ -1,20 +1,19 @@
 import express,{Request, Response} from "express";
-
-
+import dotenv from "dotenv";
+// import User from "../src/app/user/index";
+import setupRoutes from "../src/routes/routes";
+import bodyParser from "body-parser";
 const app = express();
+dotenv.config();
 
-app.use(`/test`, (req:Request, res:Response)=> {
-  res.send('<h1>test!</h1>');
-})
+app.use(bodyParser.json());
 
-app.use('/', (req:Request, res:Response) => {
-    res.send('<h1>Hello, TypeScript + Node.js + Express!</h1>');
-  });
-
+//INITIALIAING ROUTES
+setupRoutes(app);
 
   
-  const port = "6001"
+const port = process.env.PORT;
 
 app.listen(port, ()=>{
     console.log(`Server running on PORT - ${port}`);
-})
+});
