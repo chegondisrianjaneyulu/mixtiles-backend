@@ -4,8 +4,7 @@ import express,{Request, Response} from "express";
 const app = express();
 
 app.get('/', (req:Request, res:Response) => {
-    // Send a response to the client
-    res.send('Hello, TypeScript + Node.js + Exp!');
+    res.send('<h1>Hello, TypeScript + Node.js + Express!</h1>');
   });
   
   const port = "6001"
