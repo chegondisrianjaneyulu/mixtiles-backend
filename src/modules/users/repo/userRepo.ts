@@ -1,5 +1,5 @@
 
 
-export const createUser = async (body) => {
+export const createUser = async (body: any) => {
 
 }
