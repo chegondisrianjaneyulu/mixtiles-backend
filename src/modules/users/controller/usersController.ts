@@ -1,34 +1,66 @@
 import express, { Request, Response } from "express";
-import { prismaClient } from "../../../clients/db";
+import { userService } from "../services/userServices";
 
 const router = express.Router();
 
+router.get("/", async (req: Request, res: Response) => {
+  try {
+      const user = await userService.getAllUsers();
+      res.status(201).send(user);
+  } catch (e: any) {
+      res.status(500).send({ error: e?.message });
+  }
+});
+
+router.get("/:id", async (req: Request, res: Response) => {
+  try {
+      const user = await userService.getUserById(req.params.id);
+      res.status(201).send(user);
+  } catch (e: any) {
+      res.status(500).send({ error: e?.message });
+  }
+});
 
 router.post("/", async (req: Request, res: Response) => {
+  try {
+      const user = await userService.createUser(req.body);
+      res.status(201).send(user);
+  } catch (e: any) {
+      res.status(500).send({ error: e?.message });
+  }
+});
+
+router.post("/auth", async (req:Request, res:Response) => {
     try {
-        const body = req.body;
-        await prismaClient.user.create({
-            data: {
-                firstName: body?.firstName
-            }
-        })
-        res.send({ message: "User Created Successfully" });
-    } catch (error) {
-        console.log(error);
-        res.send({ error: "something went wrong" });
+      let body = req.body;
+      await userService.authenticateUser(body)
+      res.status(200).send({message:'Successful'});
+    } 
+    catch (e:any) {
+      res.status(500).send({error: e?.message})
     }
 });
 
-router.post("/auth", async (req, res) => {
-    try {
-      let body = req.body;
-    //   const data = await userService.authUser(body,req);
-      res.status(200).send();
-    } catch (e) {
-      
-      console.log("server error", e);
-      
-    }
-  });
+router.put("/users/:id", async (req: Request, res: Response) => {
+  try {
+      const userId = parseInt(req.params.id);
+      const updatedUser = await userService.updateUser(userId, req.body);
+      res.status(200).send(updatedUser);
+  } catch (e: any) {
+      res.status(500).send({ error: e?.message });
+  }
+});
+
+
+router.delete("/users/:id", async (req: Request, res: Response) => {
+  try {
+      const userId = parseInt(req.params.id);
+      await userService.deleteUser(userId);
+      res.status(200).send({ message: "User deleted successfully." });
+  } catch (e: any) {
+      res.status(500).send({ error: e?.message });
+  }
+});
+
 
 export default router;
