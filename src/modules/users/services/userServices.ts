@@ -14,21 +14,21 @@ interface User {
 
 class UserService {
     #googleClient
-    #appleAuth
+    // #appleAuth
 
     constructor() {
         this.#googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
-        this.#appleAuth = new AppleAuth(
-            {
-              client_id: process.env.APPLE_CLIENT_ID as string,
-              team_id: process.env.APPLE_TEAM_ID as string,
-              key_id: process.env.APPLE_KEY_ID as string,
-              redirect_uri: process.env.APPLE_REDIRECT_URI as string,
-              scope: "name email", 
-            },
-            process.env.APPLE_PRIVATE_KEY as string,
-            "text"
-        );
+        // this.#appleAuth = new AppleAuth(
+        //     {
+        //       client_id: process.env.APPLE_CLIENT_ID as string,
+        //       team_id: process.env.APPLE_TEAM_ID as string,
+        //       key_id: process.env.APPLE_KEY_ID as string,
+        //       redirect_uri: process.env.APPLE_REDIRECT_URI as string,
+        //       scope: "name email", 
+        //     },
+        //     process.env.APPLE_PRIVATE_KEY as string,
+        //     "text"
+        // );
     }
 
     async authenticateUser(body:any) {
@@ -37,9 +37,11 @@ class UserService {
        
         if (googleToken) {
             user = await this.#handleGoogleLogin(googleToken)
-        }else if (appleToken) {
-            user = await this.#handleAppleLogin(appleToken)
-        }else if (email && password) {
+        }
+        // else if (appleToken) {
+        //     user = await this.#handleAppleLogin(appleToken)
+        // }
+        else if (email && password) {
             user = await this.#handleEmailPasswordLogin(email, password);
         }else {
          throw new Error('Invalid Request')
@@ -105,17 +107,17 @@ class UserService {
        
     }
 
-    async #handleAppleLogin(appleToken: string) {
-        const response = await this.#appleAuth.accessToken(appleToken);
+    // async #handleAppleLogin(appleToken: string) {
+    //     const response = await this.#appleAuth.accessToken(appleToken);
 
-        const decodedToken = jwt.decode(response.id_token) as { email?: string };
+    //     const decodedToken = jwt.decode(response.id_token) as { email?: string };
 
-        if ( !decodedToken?.email ) {
-        throw new Error("Apple login did not provide an email address.");
-    }
+    //     if ( !decodedToken?.email ) {
+    //     throw new Error("Apple login did not provide an email address.");
+    // }
 
-    return this.#findOrCreateUser(decodedToken.email, { email: decodedToken.email });
-    }
+    // return this.#findOrCreateUser(decodedToken.email, { email: decodedToken.email });
+    // }
 
     async #handleEmailPasswordLogin(email: string, password:string) {
         let user = await prisma.user.findUnique({where: { email }})

@@ -3,7 +3,7 @@ import userController from "../modules/users/controller/usersController"
 
 
 const setupRoutes = async (app: any) => {
-    app.use('/user', userController);
+    app.use('/api/users', userController);
 }
 
 

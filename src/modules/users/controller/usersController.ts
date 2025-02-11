@@ -33,10 +33,11 @@ router.post("/", async (req: Request, res: Response) => {
 router.post("/auth", async (req:Request, res:Response) => {
     try {
       let body = req.body;
-      await userService.authenticateUser(body)
-      res.status(200).send({message:'Successful'});
+      let result = await userService.authenticateUser(body)
+      res.status(200).send(result);
     } 
     catch (e:any) {
+      console.log('e', e)
       res.status(500).send({error: e?.message})
     }
 });
@@ -50,7 +51,6 @@ router.put("/users/:id", async (req: Request, res: Response) => {
       res.status(500).send({ error: e?.message });
   }
 });
-
 
 router.delete("/users/:id", async (req: Request, res: Response) => {
   try {

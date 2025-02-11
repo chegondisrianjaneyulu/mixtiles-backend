@@ -1,11 +1,14 @@
-import express,{Request, Response} from "express";
+import express from "express";
 import dotenv from "dotenv";
-// import User from "../src/app/user/index";
 import setupRoutes from "../src/routes/routes";
 import bodyParser from "body-parser";
+import cors from 'cors'
+
+
 const app = express();
 dotenv.config();
 
+app.use(cors())
 app.use(bodyParser.json());
 
 //INITIALIAING ROUTES
